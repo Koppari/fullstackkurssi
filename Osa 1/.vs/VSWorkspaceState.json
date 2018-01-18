@@ -1,7 +1,12 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\o1t1-5",
+    "\\o1t1-5\\src",
+    "\\o1t6-11",
+    "\\o1t6-11\\public",
+    "\\o1t6-11\\src"
   ],
-  "SelectedNode": "\\o1t1-5",
+  "SelectedNode": "\\o1t6-11\\src\\index.js",
   "PreviewInSolutionExplorer": false
 }

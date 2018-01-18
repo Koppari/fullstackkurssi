@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-/*
 const Otsikko = (props) => {
 	return (
 	    <div>
@@ -57,35 +56,6 @@ const App = () => {
             <Yhteensa yhteensa={tehtavia1+tehtavia2+tehtavia3}/>
 		</div>
 	)
-}
-*/
-
-const App = () => {
-  const kurssi = 'Half Stack -sovelluskehitys'
-  const osat = [
-    {
-      nimi: 'Reactin perusteet',
-      tehtavia: 10
-    },
-    {
-      nimi: 'Tiedonv‰litys propseilla',
-      tehtavia: 7
-    },
-    {
-      nimi: 'Komponenttien tila',
-      tehtavia: 14
-    }
-  ]
-
-  return (
-    <div>
-        <h1>{kurssi}</h1>
-        <p>{osat[1].nimi} {osat[1].tehtavia}</p>
-        <p>{osat[2].nimi} {osat[2].tehtavia}</p>
-        <p>{osat[3].nimi} {osat[3].tehtavia}</p>
-        <p>Yhteens‰ teht‰v‰‰</p>
-    </div>
-  )
 }
 
 ReactDOM.render(

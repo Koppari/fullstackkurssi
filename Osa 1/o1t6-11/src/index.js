@@ -76,9 +76,25 @@ class App extends React.Component {
     },
     {
         nimi:"prosentti",
-        statistiikka:(((this.state.hyva/this.state.yhteensa)*100)).toFixed(1)
+        statistiikka:(((this.state.hyva/this.state.yhteensa)*100)).toFixed(1)+" %"
     }
     ]
+
+    const ehdollinenRenderointi = () => {
+         if (this.state.hyva+this.state.neutraali+this.state.huono === 0) {
+            return (
+                <div>
+                    <p>ei yhtaan palautetta annettu</p>
+                </div>
+            )
+         }
+         return (
+            <Statistics
+                rivit={rivit}
+            />
+         )
+
+    }
 
     return (
       <div>
@@ -99,9 +115,8 @@ class App extends React.Component {
 
         <h1>statistiikka</h1>
 
-        <Statistics
-            rivit={rivit}
-        />
+       {ehdollinenRenderointi()}
+
       </div>
     )
   }

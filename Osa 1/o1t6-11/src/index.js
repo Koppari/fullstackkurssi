@@ -33,27 +33,22 @@ class App extends React.Component {
     }
   }
 
-  hyvaVote = () => {
-    this.setState({
-      hyva: this.state.hyva + 1,
-      keskiarvo: this.state.keskiarvo + 1,
-      yhteensa: this.state.yhteensa + 1
-    })
-  }
-
-  neutraaliVote = () => {
-    this.setState({
-      neutraali: this.state.neutraali + 1,
-      yhteensa: this.state.yhteensa + 1
-    })
-  }
-
-  huonoVote = () => {
-    this.setState({
-      huono: this.state.huono + 1,
-      keskiarvo: this.state.keskiarvo - 1,
-      yhteensa: this.state.yhteensa + 1
-    })
+  vote = (arvo) => {
+      return () => {
+        if (arvo==="hyva") {
+            this.setState({hyva: this.state.hyva+1})
+            this.setState({keskiarvo: this.state.keskiarvo+1})
+            this.setState({yhteensa: this.state.yhteensa+1})
+        } else if (arvo==="neutraali") {
+            this.setState({neutraali: this.state.neutraali+1})
+            this.setState({keskiarvo: this.state.keskiarvo+1})
+            this.setState({yhteensa: this.state.yhteensa+1})
+        } else if (arvo==="huono") {
+            this.setState({huono: this.state.huono+1})
+            this.setState({keskiarvo: this.state.keskiarvo+1})
+            this.setState({yhteensa: this.state.yhteensa+1})
+        } 
+      }
   }
 
   render() {
@@ -101,15 +96,15 @@ class App extends React.Component {
         <h1>anna palautetta</h1>
 
         <Button
-            handleClick={this.hyvaVote}
+            handleClick={this.vote("hyva")}
             text="hyva"
         />
         <Button
-            handleClick={this.neutraaliVote}
+            handleClick={this.vote("neutraali")}
             text="neutraali"
         />
         <Button
-            handleClick={this.huonoVote}
+            handleClick={this.vote("huono")}
             text="huono"
         />
 

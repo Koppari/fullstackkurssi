@@ -1,6 +1,26 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+const Button = ({handleClick, text}) => (
+    <button onClick={handleClick}>
+        {text}
+    </button>
+)
+
+const Statistics = ({rivit}) => {
+    return rivit.map(rivi => (
+        <div>
+            <Statistic nimi={rivi.nimi} statistiikka={rivi.statistiikka} />
+        </div>       
+    ));
+}
+
+const Statistic = ({nimi, statistiikka}) => (
+    <div>
+        <p>{nimi} {statistiikka}</p>
+    </div>
+)
+
 class App extends React.Component {
   constructor() {
     super()
@@ -37,26 +57,51 @@ class App extends React.Component {
   }
 
   render() {
+    const rivit = [
+    {
+        nimi:"hyva",
+        statistiikka:this.state.hyva
+    },
+    {
+        nimi:"neutraali",
+        statistiikka:this.state.neutraali
+    },
+    {
+        nimi:"huono",
+        statistiikka:this.state.huono
+    },
+    {
+        nimi:"keskiarvo",
+        statistiikka:this.state.keskiarvo
+    },
+    {
+        nimi:"prosentti",
+        statistiikka:(((this.state.hyva/this.state.yhteensa)*100)).toFixed(1)
+    }
+    ]
+
     return (
       <div>
         <h1>anna palautetta</h1>
 
-        <button onClick={this.hyvaVote}>
-            hyva
-        </button>
-        <button onClick={this.neutraaliVote}>
-            neutraali
-        </button>
-        <button onClick={this.huonoVote}>
-            huono
-        </button>
+        <Button
+            handleClick={this.hyvaVote}
+            text="hyva"
+        />
+        <Button
+            handleClick={this.neutraaliVote}
+            text="neutraali"
+        />
+        <Button
+            handleClick={this.huonoVote}
+            text="huono"
+        />
 
         <h1>statistiikka</h1>
-        <p>hyva {this.state.hyva}</p>
-        <p>neutraali {this.state.neutraali}</p>
-        <p>huono {this.state.huono}</p>
-        <p>keskiarvo {this.state.keskiarvo}</p>
-        <p>positiivisia {(((this.state.hyva/this.state.yhteensa)*100)).toFixed(1)} %</p>
+
+        <Statistics
+            rivit={rivit}
+        />
       </div>
     )
   }

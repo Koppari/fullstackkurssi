@@ -9,15 +9,22 @@ const Button = ({handleClick, text}) => (
 
 const Statistics = ({rivit}) => {
     return rivit.map(rivi => (
-        <div>
-            <Statistic nimi={rivi.nimi} statistiikka={rivi.statistiikka} />
-        </div>       
+        <tbody>
+            <tr> 
+                <td>
+                    <Statistic nimi={rivi.nimi} />
+                </td>
+                <td>
+                    <Statistic statistiikka={rivi.statistiikka} />
+                </td>
+            </tr>
+        </tbody>
     ));
 }
 
 const Statistic = ({nimi, statistiikka}) => (
     <div>
-        <p>{nimi} {statistiikka}</p>
+        {nimi} {statistiikka}
     </div>
 )
 
@@ -41,11 +48,10 @@ class App extends React.Component {
             this.setState({yhteensa: this.state.yhteensa+1})
         } else if (arvo==="neutraali") {
             this.setState({neutraali: this.state.neutraali+1})
-            this.setState({keskiarvo: this.state.keskiarvo+1})
             this.setState({yhteensa: this.state.yhteensa+1})
         } else if (arvo==="huono") {
             this.setState({huono: this.state.huono+1})
-            this.setState({keskiarvo: this.state.keskiarvo+1})
+            this.setState({keskiarvo: this.state.keskiarvo-1})
             this.setState({yhteensa: this.state.yhteensa+1})
         } 
       }
@@ -84,9 +90,11 @@ class App extends React.Component {
             )
          }
          return (
+         <table>
             <Statistics
                 rivit={rivit}
             />
+         </table>
          )
 
     }
@@ -110,7 +118,7 @@ class App extends React.Component {
 
         <h1>statistiikka</h1>
 
-       {ehdollinenRenderointi()}
+        {ehdollinenRenderointi()}
 
       </div>
     )

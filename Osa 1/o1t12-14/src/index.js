@@ -5,8 +5,7 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selected: anecdotes[Math.floor(Math.random() * anecdotes.length)],
-      votes: 0
+      selected: anecdotes[Math.floor(Math.random() * anecdotes.length)]
     }
   }
 
@@ -18,6 +17,19 @@ class App extends React.Component {
     const anecdote = this.state.selected
     anecdote.votes++
     this.forceUpdate();
+  }
+
+  mostVotes = () => {
+    var maxVotes = this.props.anecdotes.reduce(function(sum, value) {
+    return (sum.votes > value.votes) ? sum : value;
+    }, this.props.anecdotes[0]);
+
+    return (
+        <div>
+            <p>{maxVotes.anecdote}</p>
+            has {maxVotes.votes} votes
+        </div>
+    );
   }
 
   render() {
@@ -35,6 +47,10 @@ class App extends React.Component {
                 vote
             </button>
         </div>
+
+        <h2>anecdote with most votes:</h2>
+
+        {this.mostVotes()}
 
       </div>
     )

@@ -24,8 +24,7 @@ const Yhteensa = ({osat}) => {
             Yhteensa {osat
                 .reduce(function (sum, osa) {
                     return sum + osa.tehtavia
-                }, 0)}
-            tehtavaa
+                }, 0)} tehtavaa
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import Number from './components/Number'
 
 class App extends React.Component {
   constructor(props) {
@@ -92,12 +93,7 @@ class App extends React.Component {
         <h2>Numerot</h2>
 
         <table>
-          <tbody>
-            {persons.map(person => <tr key={person.name}>
-              <td>{person.name}</td>
-              <td>{person.number}</td>
-            </tr>)}
-          </tbody>
+          {persons.map(person => <Number key={person.name} person={person}/>)}
         </table>
 
       </div>

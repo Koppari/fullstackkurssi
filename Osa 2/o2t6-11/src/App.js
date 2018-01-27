@@ -9,16 +9,25 @@ class App extends React.Component {
           name: 'Arto Hellas'
         }
       ],
-      newName: ''
+      newName: '', 
     }
+    this.uusiNumero = this.uusiNumero.bind(this)
   }
 
   uusiNumero = (event) => {
     event.preventDefault()
+    var lastPerson = this.state.persons[this.state.persons.length-1].name
 
     const numero = {
       name: this.state.newName
     }
+
+    /* Only works because added number is always the last index*/
+    if (lastPerson === this.state.newName) {
+      console.log("Duplicate name, dude");
+      return
+    }
+
     const numerot = this
       .state
       .persons
@@ -28,7 +37,6 @@ class App extends React.Component {
   }
 
   handleUusiNumero = (event) => {
-    console.log(event.target.value);
     this.setState({newName: event.target.value});
   }
 

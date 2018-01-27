@@ -8,10 +8,20 @@ class App extends React.Component {
         {
           name: 'Arto Hellas',
           number: '040-123456'
+        }, {
+          name: 'Martti Tienari',
+          number: '040-123456'
+        }, {
+          name: 'Arto Järvinen',
+          number: '040-123456'
+        }, {
+          name: 'Lea Kutvonen',
+          number: '040-123456'
         }
       ],
       newName: '',
-      newNumber: ''
+      newNumber: '',
+      filter: ''
     }
   }
 
@@ -47,35 +57,46 @@ class App extends React.Component {
     this.setState({newNumber: event.target.value});
   }
 
+  handleFilter = (event) => {
+    this.setState({filter: event.target.value});
+  }
+
   render() {
+    let persons = this
+      .state
+      .persons
+      .filter(person => person.name.toLowerCase().trim().indexOf(this.state.filter.toLowerCase()) > -1)
+
     return (
       <div>
         <h2>Puhelinluettelo</h2>
-        
+        <div>
+          Etsi luettelosta:
+          <input value={(this.state.filter)} onChange={this.handleFilter}/>
+        </div>
+        <h2>Uusi numero</h2>
         <form onSubmit={this.uusiNumero}>
           <div>
-            nimi:
+            Nimi:
             <input value={this.state.newName} onChange={this.handleUusiNimi}/>
           </div>
           <div>
-            numero:
+            Numero:
             <input value={this.state.newNumber} onChange={this.handleUusiNumero}/>
           </div>
           <div>
-            <button type="submit">lisää</button>
+            <button type="submit">Lisää</button>
           </div>
         </form>
 
         <h2>Numerot</h2>
+
         <table>
           <tbody>
-            {this
-              .state
-              .persons
-              .map(person => <tr key={person.name}>
-                <td>{person.name}</td>
-                <td>{person.number}</td>
-              </tr>)}
+            {persons.map(person => <tr key={person.name}>
+              <td>{person.name}</td>
+              <td>{person.number}</td>
+            </tr>)}
           </tbody>
         </table>
 

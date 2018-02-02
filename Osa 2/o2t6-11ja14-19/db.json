@@ -24,6 +24,16 @@
       "name": "Petteri Naama",
       "number": "040-123456",
       "id": 5
+    },
+    {
+      "name": " Arto Hella",
+      "number": "040-123456",
+      "id": 6
+    },
+    {
+      "name": "Paskanaama",
+      "number": "040-123456",
+      "id": 7
     }
   ]
 }

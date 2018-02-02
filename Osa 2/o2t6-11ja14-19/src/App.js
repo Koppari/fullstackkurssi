@@ -1,6 +1,6 @@
 import React from 'react'
 import Number from './components/Number'
-import axios from 'axios'
+import personsService from './services/persons'
 
 class App extends React.Component {
   constructor(props) {
@@ -14,10 +14,10 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios
-      .get('http://localhost:3001/persons')
+    personsService
+      .getAll()
       .then(response => {
-        this.setState({persons: response.data})
+        this.setState({persons: response})
       })
   }
 
@@ -47,9 +47,9 @@ class App extends React.Component {
       console.log("Duplicate name!");
       return
     } else {
-      axios
-        .post('http://localhost:3001/persons', numero)
-        .then(response => {
+      personsService
+        .create(numero)
+        .then(numero => {
           this.setState({
             persons: this
               .state
@@ -59,9 +59,8 @@ class App extends React.Component {
             newNumber: ''
           })
         })
+      dup = false;
     }
-
-    dup = false;
   }
 
   handleUusiNimi = (event) => {

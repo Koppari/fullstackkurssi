@@ -1,29 +1,24 @@
-import React from 'react';
+import React from 'react'
 import Number from './components/Number'
+import axios from 'axios'
 
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      persons: [
-        {
-          name: 'Arto Hellas',
-          number: '040-123456'
-        }, {
-          name: 'Martti Tienari',
-          number: '040-123456'
-        }, {
-          name: 'Arto Järvinen',
-          number: '040-123456'
-        }, {
-          name: 'Lea Kutvonen',
-          number: '040-123456'
-        }
-      ],
+      persons: [],
       newName: '',
       newNumber: '',
       filter: ''
     }
+  }
+
+  componentDidMount() {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        this.setState({persons: response.data})
+      })
   }
 
   uusiNumero = (event) => {
@@ -51,15 +46,15 @@ class App extends React.Component {
   }
 
   handleUusiNimi = (event) => {
-    this.setState({newName: event.target.value});
+    this.setState({newName: event.target.value})
   }
 
   handleUusiNumero = (event) => {
-    this.setState({newNumber: event.target.value});
+    this.setState({newNumber: event.target.value})
   }
 
   handleFilter = (event) => {
-    this.setState({filter: event.target.value});
+    this.setState({filter: event.target.value})
   }
 
   render() {

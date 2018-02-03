@@ -23,22 +23,25 @@ class App extends React.Component {
 
   uusiNumero = (event) => {
     event.preventDefault()
-
     var dup = false;
+    var dupPerson = this
+      .state
+      .persons
+      .find(p => p.name === this.state.newName)
     var persons = this.state.persons
     const numero = {
       name: this.state.newName,
       number: this.state.newNumber
     }
 
+    //jos tyhjä nimi tai numero, ei lisätä
     if (numero.name.trim() === '' || numero.number.trim() === '') {
       console.log("Empty name or number!");
       return
     }
 
-    /*voisi hoitaa myös filterilla*/
     persons
-      .forEach(function (item, index, array) {
+      .forEach(function (item, array) {
         if (numero.name.toLowerCase().trim() === item.name.toLowerCase().trim()) {
           dup = true;
         }
@@ -46,7 +49,11 @@ class App extends React.Component {
 
     if (dup === true) {
       console.log("Duplicate name!");
-      return
+      if (window.confirm(dupPerson.name + ' on jo luettelossa, haluatko vaihtaa numeroa?')) 
+        personsService.update(dupPerson.id, numero).then(numero => {
+          persons[persons.findIndex(p => dupPerson.id === p.id)] = numero
+          this.setState({persons: this.state.persons})
+        })
     } else {
       personsService
         .create(numero)

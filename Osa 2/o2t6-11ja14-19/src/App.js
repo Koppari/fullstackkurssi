@@ -36,6 +36,7 @@ class App extends React.Component {
       return
     }
 
+    /*voisi hoitaa myös filterilla*/
     persons
       .forEach(function (item, index, array) {
         if (numero.name.toLowerCase().trim() === item.name.toLowerCase().trim()) {
@@ -60,6 +61,25 @@ class App extends React.Component {
           })
         })
       dup = false;
+    }
+  }
+
+  remove = (id) => {
+    return () => {
+      const person = this
+        .state
+        .persons
+        .find(p => p.id === id)
+
+      if (window.confirm('Poistetaanko henkilön ' + person.name + " numero?")) 
+        personsService.remove(person.id).then(person => {
+          this.setState({
+            persons: this
+              .state
+              .persons
+              .filter(p => p.id !== id)
+          })
+        })
     }
   }
 
@@ -106,7 +126,7 @@ class App extends React.Component {
         <h2>Numerot</h2>
 
         <table>
-          {persons.map(person => <Number key={person.name} person={person}/>)}
+          {persons.map(person => <Number key={person.name} person={person} remove={this.remove(person.id)}/>)}
         </table>
 
       </div>

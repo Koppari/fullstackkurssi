@@ -1,6 +1,8 @@
 import React from 'react'
 import Number from './components/Number'
+import Notification from './components/Notification'
 import personsService from './services/persons'
+import './index.css'
 
 class App extends React.Component {
   constructor(props) {
@@ -9,7 +11,9 @@ class App extends React.Component {
       persons: [],
       newName: '',
       newNumber: '',
-      filter: ''
+      filter: '',
+      success: null,
+      error: null
     }
   }
 
@@ -24,37 +28,54 @@ class App extends React.Component {
   uusiNumero = (event) => {
     event.preventDefault()
     var dup = false;
-    var dupPerson = this
-      .state
-      .persons
-      .find(p => p.name === this.state.newName)
     var persons = this.state.persons
-    const numero = {
-      name: this.state.newName,
+    var numero = {
+      name: this
+        .state
+        .newName
+        .trim(),
       number: this.state.newNumber
     }
-
-    //jos tyhjä nimi tai numero, ei lisätä
     if (numero.name.trim() === '' || numero.number.trim() === '') {
-      console.log("Empty name or number!");
       return
     }
 
     persons
       .forEach(function (item, array) {
-        if (numero.name.toLowerCase().trim() === item.name.toLowerCase().trim()) {
+        if (numero.name.toLowerCase() === item.name.toLowerCase()) {
           dup = true;
         }
       });
 
     if (dup === true) {
-      console.log("Duplicate name!");
-      if (window.confirm(dupPerson.name + ' on jo luettelossa, haluatko vaihtaa numeroa?')) 
-        personsService.update(dupPerson.id, numero).then(numero => {
-          persons[persons.findIndex(p => dupPerson.id === p.id)] = numero
-          this.setState({persons: this.state.persons})
+      var person = persons[
+        this
+          .state
+          .persons
+          .findIndex(p => p.name === numero.name)
+      ]
+      if (window.confirm(person.name + ' on jo luettelossa, haluatko vaihtaa numeroa?')) 
+        personsService.update(person.id, numero).then(numero => {
+          persons[persons.findIndex(p => numero.id === p.id)] = numero
+          this.setState({persons: this.state.persons, success: "Numero muutettu!"})
+          setTimeout(() => {
+            this.setState({success: null})
+          }, 3000)
+        }).catch(error => {
+          alert("Numero on poistettu sillä välin kun yritit muuttaa sitä!")
+          this.setState({
+            persons: this
+              .state
+              .persons
+              .filter(p => p.id !== person.id)
+          })
+          setTimeout(() => {
+            this.setState({success: null})
+          }, 3000)
         })
-    } else {
+
+      }
+    else {
       personsService
         .create(numero)
         .then(numero => {
@@ -64,8 +85,12 @@ class App extends React.Component {
               .persons
               .concat(numero),
             newName: '',
-            newNumber: ''
+            newNumber: '',
+            success: 'Numero lisätty!'
           })
+          setTimeout(() => {
+            this.setState({success: null})
+          }, 3000)
         })
       dup = false;
     }
@@ -84,8 +109,12 @@ class App extends React.Component {
             persons: this
               .state
               .persons
-              .filter(p => p.id !== id)
+              .filter(p => p.id !== id),
+            success: 'Numero poistettu!'
           })
+          setTimeout(() => {
+            this.setState({success: null})
+          }, 3000)
         })
     }
   }
@@ -110,6 +139,7 @@ class App extends React.Component {
 
     return (
       <div>
+
         <h2>Puhelinluettelo</h2>
         <div>
           Etsi luettelosta:
@@ -132,9 +162,16 @@ class App extends React.Component {
 
         <h2>Numerot</h2>
 
-        <table>
-          {persons.map(person => <Number key={person.name} person={person} remove={this.remove(person.id)}/>)}
-        </table>
+        <div>
+          <table>
+            {persons.map(person => <Number key={person.name} person={person} remove={this.remove(person.id)}/>)}
+          </table>
+        </div>
+
+        <div>
+          <Notification message={this.state.success}/>
+          <Notification message={this.state.error}/>
+        </div>
 
       </div>
     )

@@ -3,23 +3,27 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const mongoose = require('mongoose')
+const Blog = require('./models/Blog')
 
-const Blog = mongoose.model('Blog', {
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
+const morgan = require('morgan')
+morgan.token('body', function (req, res) {
+  return JSON.stringify(req.body)
 })
-
-module.exports = Blog
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.body(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'),
+    '-',
+    tokens['response-time'](req, res),
+    'ms'
+  ].join(' ')
+}))
 
 app.use(cors())
 app.use(bodyParser.json())
-
-const mongoUrl = 'mongodb://localhost/bloglist'
-mongoose.connect(mongoUrl)
-mongoose.Promise = global.Promise
 
 app.get('/api/blogs', (request, response) => {
   Blog
@@ -31,11 +35,12 @@ app.get('/api/blogs', (request, response) => {
 
 app.post('/api/blogs', (request, response) => {
   const blog = new Blog(request.body)
-
   blog
     .save()
     .then(result => {
-      response.status(201).json(result)
+      response
+        .status(201)
+        .json(result)
     })
 })
 

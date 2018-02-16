@@ -80,3 +80,27 @@ describe('favorite blog', () => {
         expect(result).toBe(listWithManyBlogs[2])
     })
 })
+
+describe('most blogs', () => {
+    test('is correct with one blog', () => {
+        const result = listHelper.mostBlogs(listWithOneBlog)
+        expect(result).toBe(listWithOneBlog[0].author)
+    })
+
+    test('is correct with many blogs', () => {
+        const result = listHelper.mostBlogs(listWithManyBlogs)
+        expect(result).toBe(listWithManyBlogs[3].author)
+    })
+})
+
+describe('most likes', () => {
+    test('is correct with one blog', () => {
+        const result = listHelper.mostLikes(listWithOneBlog)
+        expect(result).toBe(listWithOneBlog[0].author)
+    })
+
+    test('is correct with many blogs', () => {
+        const result = listHelper.mostLikes(listWithManyBlogs)
+        expect(result).toBe(listWithManyBlogs[1].author)
+    })
+})

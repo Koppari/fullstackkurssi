@@ -49,9 +49,7 @@ const mostLikes = (blogs) => {
             return o.likes
         }))
 
-    return author = countLikesToMap
-        .find(author => author.likes === highestLikes)
-        .author
+    return countLikesToMap.find(author => author.likes === highestLikes)
 }
 
 module.exports = {

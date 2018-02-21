@@ -96,11 +96,11 @@ describe('most blogs', () => {
 describe('most likes', () => {
     test('is correct with one blog', () => {
         const result = listHelper.mostLikes(listWithOneBlog)
-        expect(result).toBe(listWithOneBlog[0].author)
+        expect(result).toEqual({"author": "Edsger W. Dijkstra", "likes": 5})
     })
 
     test('is correct with many blogs', () => {
         const result = listHelper.mostLikes(listWithManyBlogs)
-        expect(result).toBe(listWithManyBlogs[1].author)
+        expect(result).toEqual({"author": "Edsger W. Dijkstra", "likes": 17})
     })
 })

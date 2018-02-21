@@ -25,27 +25,51 @@ const initBlogs = [
 beforeAll(async() => {
     await Blog.remove()
 
-    let blogObject = new Blog(initBlogs[0])
-    await blogObject.save()
-
-    blogObject = new Blog(initBlogs[1])
-    await blogObject.save()
+    const blogObjects = initBlogs.map(blog => new Blog(blog))
+    const promiseArray = blogObjects.map(blog => blog.save())
+    await Promise.all(promiseArray)
 })
 
-test('all blogs are returned', async() => {
-    const response = await api.get('/api/blogs')
+describe('HTTP', () => {
+    test('GET returns all blogs', async() => {
+        const response = await api.get('/api/blogs')
 
-    expect(response.body.length).toBe(initBlogs.length)
-})
+        expect(response.body.length).toBe(initBlogs.length)
+    })
 
-test('a specific blog is found', async() => {
-    const response = await api.get('/api/blogs')
+    test('GET contains a specific blog', async() => {
+        const response = await api.get('/api/blogs')
 
-    const titles = response
-        .body
-        .map(r => r.title)
+        const titles = response
+            .body
+            .map(r => r.title)
 
-    expect(titles).toContain('TDD harms architecture')
+        expect(titles).toContain('TDD harms architecture')
+    })
+
+    test('POST adds an entry and increases initBlogs size', async() => {
+        const newBlog = {
+            title: "123",
+            author: "A. A",
+            url: "test.com",
+            likes: 2
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+
+        const titles = response
+            .body
+            .map(r => r.title)
+
+        expect(response.body.length).toBe(initBlogs.length + 1)
+        expect(titles).toContain('123')
+    })
 })
 
 afterAll(() => {

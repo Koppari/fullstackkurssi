@@ -70,6 +70,28 @@ describe('HTTP', () => {
         expect(response.body.length).toBe(initBlogs.length + 1)
         expect(titles).toContain('123')
     })
+
+    test('POST with no likes value gives likes: 0', async() => {
+        const newBlog = {
+            title: "123",
+            author: "A. A",
+            url: "test.com"
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+
+        const likes = response
+            .body
+            .map(r => r.likes)
+
+        expect(likes.slice(-1).pop()).toBe(0)
+    })
 })
 
 afterAll(() => {

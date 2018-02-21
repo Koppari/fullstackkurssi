@@ -27,12 +27,23 @@ blogsRouter.get('/:id', async(request, response) => {
 
 blogsRouter.post('/', (request, response) => {
     const blog = new Blog(request.body)
+
+    if (blog.likes === undefined) {
+        blog.likes = 0
+    }
+
     blog
         .save()
         .then(result => {
             response
                 .status(201)
                 .json(result)
+        })
+        .catch(e => {
+            console.log(e);
+            response
+                .status(500)
+                .json({e: "Error!"})
         })
 })
 

@@ -58,7 +58,7 @@ describe('HTTP', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
-            .expect(201)
+            .expect(200)
             .expect('Content-Type', /application\/json/)
 
         const response = await api.get('/api/blogs')
@@ -81,7 +81,7 @@ describe('HTTP', () => {
         await api
             .post('/api/blogs')
             .send(newBlog)
-            .expect(201)
+            .expect(200)
             .expect('Content-Type', /application\/json/)
 
         const response = await api.get('/api/blogs')
@@ -92,9 +92,19 @@ describe('HTTP', () => {
 
         expect(likes.slice(-1).pop()).toBe(0)
     })
+
+    test('POST with no title and url returns 400', async() => {
+        const newBlog = {
+            likes: 1
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(400)
+    })
 })
 
 afterAll(() => {
-    console.log("Closing server");
     server.close()
 })

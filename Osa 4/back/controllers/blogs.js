@@ -25,26 +25,29 @@ blogsRouter.get('/:id', async(request, response) => {
     }
 })
 
-blogsRouter.post('/', (request, response) => {
-    const blog = new Blog(request.body)
+blogsRouter.post('/', async(request, response) => {
+    try {
+        const body = request.body
 
-    if (blog.likes === undefined) {
-        blog.likes = 0
+        if (body.likes === undefined) {
+            body.likes = 0
+        }
+        if (body.title === undefined && body.url === undefined) {
+            return response
+                .status(400)
+                .json({error: "A blog must have a title and an url!"})
+        }
+
+        const blog = new Blog({title: body.title, author: body.author, url: body.url, likes: body.likes})
+
+        const savedBlog = await blog.save()
+        response.json(savedBlog)
+    } catch (e) {
+        console.log("Exception catched!");
+        response
+            .status(404)
+            .json({e: '404'})
     }
-
-    blog
-        .save()
-        .then(result => {
-            response
-                .status(201)
-                .json(result)
-        })
-        .catch(e => {
-            console.log(e);
-            response
-                .status(500)
-                .json({e: "Error!"})
-        })
 })
 
 module.exports = blogsRouter

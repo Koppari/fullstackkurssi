@@ -14,7 +14,7 @@ describe('when blogs exist in db', async() => {
         await Promise.all(blogObjects.map(blog => blog.save()))
     })
 
-    describe('GET', () => {
+    describe('GET', async() => {
         test('GET returns all blogs', async() => {
             const blogsInDb = await helper.blogsInDb()
 
@@ -62,7 +62,7 @@ describe('when blogs exist in db', async() => {
         })
     })
 
-    describe('POST', () => {
+    describe('POST', async() => {
         test('POST adds a valid entry', async() => {
             const blogsAtStart = await helper.blogsInDb()
 
@@ -118,6 +118,57 @@ describe('when blogs exist in db', async() => {
                 .post('/api/blogs')
                 .send(newBlog)
                 .expect(400)
+        })
+    })
+
+    describe('DELETE', async() => {
+        let addedBlog
+        beforeAll(async() => {
+            addedBlog = new Blog({title: "Test", author: "A. A", url: "test.com", likes: 2})
+            await addedBlog.save()
+        })
+
+        test('DELETE returns 204 and deletes entry', async() => {
+            const blogsAtStart = await helper.blogsInDb()
+
+            await api
+                .delete(`/api/blogs/${addedBlog.id}`)
+                .expect(204)
+
+            const blogsAfterDELETE = await helper.blogsInDb()
+
+            const blogs = blogsAfterDELETE.map(blog => blog.title)
+
+            expect(blogs)
+                .not
+                .toContain(addedBlog.title)
+            expect(blogsAfterDELETE.length).toBe(blogsAtStart.length - 1)
+        })
+    })
+
+    describe('PUT', async() => {
+        test('PUT returns 200 and updates entry', async() => {
+            const blogsInDb = await helper.blogsInDb()
+            const blog = blogsInDb[1]
+
+            const updateBlog = {
+                title: "12345",
+                author: "A. B",
+                likes: 1
+            }
+
+            await api
+                .put(`/api/blogs/${blog.id}`)
+                .send(updateBlog)
+                .expect(200)
+                .expect('Content-Type', /application\/json/)
+
+            const blogsAfterPUT = await helper.blogsInDb()
+
+            const blogs = blogsAfterPUT.map(blog => blog.title)
+
+            expect(blogs).toContain(updateBlog.title)
+            expect(blogs.length).toBe(blogsInDb.length)
         })
     })
 

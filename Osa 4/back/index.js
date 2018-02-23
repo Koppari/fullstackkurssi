@@ -7,6 +7,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
 const morgan = require('morgan')
 morgan.token('body', function (req, res) {
   return JSON.stringify(req.body)
@@ -21,7 +22,7 @@ mongoose
     console.log(err)
   })
   
-mongoose .Promise = global.Promise
+mongoose.Promise = global.Promise
 
 if (process.env.NODE_ENV !== 'test') {
   app.use(morgan(function (tokens, req, res) {
@@ -41,6 +42,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(cors())
 app.use(bodyParser.json())
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 app.use(middleware.error)
 
 const server = http.createServer(app)

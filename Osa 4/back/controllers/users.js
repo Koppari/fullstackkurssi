@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/User')
+const Blog = require('../models/Blog')
 
 usersRouter.get('/', async(request, response) => {
-    const users = await User.find({})
-    response.json(users)
+    const users = await User.find({}).populate('blogs', {__v: 0, user: 0})
+    response.json(users.map(User.format))
 })
 
 usersRouter.post('/', async(request, response) => {
@@ -12,21 +13,15 @@ usersRouter.post('/', async(request, response) => {
         const body = request.body
 
         const checkDuplicate = await User.find({username: body.username})
-        if (checkDuplicate.length > 0 || body.username.length === 0) {
-            return response
-                .status(400)
-                .json({e: 'Existing or invalid username.'})
-        }
 
-        if (body.password.length < 3) {
-            return response
-                .status(400)
-                .json({e: 'Password should be >= 3 characters long!'})
-        }
+        if (checkDuplicate.length > 0 || body.username.trim().length === 0) 
+            return response.status(400).json({e: 'Existing or invalid username.'})
 
-        if (body.adult === undefined) {
+        if (body.password.length < 3) 
+            return response.status(400).json({e: 'Password should be >= 3 characters long!'})
+
+        if (body.adult === undefined) 
             body.adult = true
-        }
 
         const saltRounds = 10
         const passwordHash = await bcrypt.hash(body.password, saltRounds)
@@ -35,7 +30,7 @@ usersRouter.post('/', async(request, response) => {
 
         const savedUser = await user.save()
 
-        response.json(savedUser)
+        response.json(User.format(savedUser))
     } catch (e) {
         response
             .status(500)

@@ -2,6 +2,7 @@ const supertest = require('supertest')
 const {app, server} = require('../index')
 const api = supertest(app)
 const Blog = require('../models/Blog')
+const User = require('../models/User')
 const helper = require('../utils/blog_api_helper')
 
 describe('when blogs exist in db', async() => {
@@ -84,7 +85,7 @@ describe('when blogs exist in db', async() => {
             expect(blogsAfterPOST.length).toBe(blogsAtStart.length + 1)
 
             const titles = blogsAfterPOST.map(blog => blog.title)
-            expect(titles).toContain('123')
+            expect(titles).toContain("123")
         })
 
         test('POST with no likes value gives likes: 0', async() => {

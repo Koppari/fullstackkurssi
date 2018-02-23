@@ -1,4 +1,5 @@
 const Blog = require('../models/Blog')
+const User = require('../models/User')
 
 const initBlogs = [
     {
@@ -8,6 +9,7 @@ const initBlogs = [
         url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful' +
                 '.html',
         likes: 5,
+        userId: 123,
         __v: 0
     }, {
         _id: "5a422ba71b54a676234d17fb",
@@ -15,6 +17,7 @@ const initBlogs = [
         author: "Robert C. Martin",
         url: "http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html",
         likes: 0,
+        userId: 123,
         __v: 0
     }
 ]
@@ -36,6 +39,11 @@ const nonExistingId = async() => {
 const blogsInDb = async() => {
     const blogs = await Blog.find({})
     return blogs.map(format)
+}
+
+const usersInDb = async() => {
+    const users = await User.find({})
+    return users
 }
 
 module.exports = {

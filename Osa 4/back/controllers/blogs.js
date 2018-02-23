@@ -1,22 +1,20 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/Blog')
+const User = require('../models/User')
 
 blogsRouter.get('/', async(request, response) => {
-    const blogs = await Blog.find({})
-    response.json(blogs)
+    const blogs = await Blog.find({}).populate('user', {_id: 1, username: 1})
+    response.json(blogs.map(Blog.format))
 })
 
 blogsRouter.get('/:id', async(request, response) => {
     try {
         const blog = await Blog.findById(request.params.id)
-
-        if (blog) {
-            response.json(blog)
-        } else {
-            response
-                .status(404)
+        blog
+            ? response.json(blog)
+            : response
+                .status(500)
                 .end
-        }
     } catch (e) {
         response
             .status(404)
@@ -31,16 +29,24 @@ blogsRouter.post('/', async(request, response) => {
         if (body.likes === undefined) {
             body.likes = 0
         }
+
         if (body.title === undefined && body.url === undefined) {
             return response
                 .status(400)
                 .json({error: "A blog must have a title and an url!"})
         }
 
-        const blog = new Blog({title: body.title, author: body.author, url: body.url, likes: body.likes})
+        const user = await User.findById(body.userId)
 
+        const blog = new Blog({title: body.title, author: body.author, url: body.url, likes: body.likes, user: user._id})
         const savedBlog = await blog.save()
-        response.json(savedBlog)
+
+        user.blogs = user
+            .blogs
+            .concat(savedBlog._id)
+        await user.save()
+
+        response.json(Blog.format(savedBlog))
     } catch (e) {
         console.log("Exception catched!");
         response
@@ -52,7 +58,7 @@ blogsRouter.post('/', async(request, response) => {
 blogsRouter.put('/:id', async(request, response) => {
     try {
         const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, request.body, {new: true})
-        response.json(updatedBlog)
+        response.json(Blog.format(updatedBlog))
     } catch (e) {
         response
             .status(404)

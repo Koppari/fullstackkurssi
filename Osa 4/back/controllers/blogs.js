@@ -115,6 +115,6 @@ blogsRouter.delete('/:id', async(request, response) => {
                 .status(500)
                 .json({e: '500'})
         }
-}})
+})
 
 module.exports = blogsRouter

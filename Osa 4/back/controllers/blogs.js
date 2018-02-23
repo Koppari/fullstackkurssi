@@ -38,11 +38,9 @@ blogsRouter.post('/', async(request, response) => {
                 .status(401)
                 .json({error: 'Token missing or invalid!'})
         }
-
         if (body.likes === undefined) {
             body.likes = 0
         }
-
         if (body.title === undefined && body.url === undefined) {
             return response
                 .status(400)
@@ -85,14 +83,32 @@ blogsRouter.put('/:id', async(request, response) => {
 
 blogsRouter.delete('/:id', async(request, response) => {
     try {
-        await Blog.findByIdAndRemove(request.params.id)
-        response
-            .status(204)
-            .end()
+        const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+        if (!request.token || !decodedToken.id) {
+            return response
+                .status(401)
+                .json({error: 'Invalid token for deletion'})
+        }
+
+        const blog = await Blog.findById(request.params.id)
+        const creatorUser = await User.findById(blog.user)
+        const currentUser = await User.findById(decodedToken.id)
+
+        if (creatorUser.id === currentUser.id) {
+            await Blog.findByIdAndRemove(request.params.id)
+            response
+                .status(204)
+                .end()
+        } else {
+            return response
+                .status(401)
+                .json({error: 'Unauthorized deletion!'})
+        }
     } catch (e) {
         response
-            .status(404)
-            .json({e: '404'})
+            .status(401)
+            .json({e: 'Invalid token for deletion'})
     }
 })
 

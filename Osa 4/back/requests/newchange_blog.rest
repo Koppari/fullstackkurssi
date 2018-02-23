@@ -1,11 +1,13 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFBQSIsImlkIjoiNWE5MDdmMDk1ZThmMTIxNzAwYWRiMGU1IiwiaWF0IjoxNTE5NDIwNTI1fQ.glR31foQGi5e1i4-DY-ZmJqoe0IdbctXRP1izZ-d9i0
 
 {
     "title": "123",
-    "author": "A. A",
+    "author": "A B C",
     "url": "test.com",
-    "likes": 2
+    "likes": 1,
+    "user": "5a907f095e8f121700adb0e5"
 }
 
 PUT http://localhost:3003/api/blogs/5a8f2a1c447451286093ed26

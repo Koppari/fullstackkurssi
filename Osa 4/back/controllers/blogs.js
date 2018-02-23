@@ -106,10 +106,15 @@ blogsRouter.delete('/:id', async(request, response) => {
                 .json({error: 'Unauthorized deletion!'})
         }
     } catch (e) {
-        response
-            .status(401)
-            .json({e: 'Invalid token for deletion'})
-    }
-})
+        if (e.name === 'JsonWebTokenError') {
+            response
+                .status(401)
+                .json({e: e.message})
+        } else 
+            response
+                .status(500)
+                .json({e: '500'})
+        }
+}})
 
 module.exports = blogsRouter

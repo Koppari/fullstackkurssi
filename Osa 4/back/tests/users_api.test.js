@@ -2,7 +2,7 @@ const supertest = require('supertest')
 const {app, server} = require('../index')
 const api = supertest(app)
 const User = require('../models/User')
-const helper = require('../utils/users_api_helper')
+const helper = require('../utils/helpers/users_api_helper')
 
 describe('when users exist in db', async() => {
     beforeAll(async() => {

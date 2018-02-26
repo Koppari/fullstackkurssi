@@ -18,6 +18,15 @@ class App extends React.Component {
     blogService
       .getAll()
       .then(blogs => this.setState({blogs}))
+
+    const loggedUserJSON = window
+      .localStorage
+      .getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      this.setState({user})
+      blogService.setToken(user.token)
+    }
   }
 
   login = async(e) => {
@@ -25,12 +34,24 @@ class App extends React.Component {
     try {
       const user = await loginService.login({username: this.state.username, password: this.state.password})
       this.setState({username: '', password: '', user})
+      window
+        .localStorage
+        .setItem('loggedUser', JSON.stringify(user))
+      blogService.setToken(user.token)
     } catch (e) {
       this.setState({error: 'Invalid username or password.'})
       setTimeout(() => {
         this.setState({error: null})
       }, 5000)
     }
+  }
+
+  logout = async(e) => {
+    e.preventDefault()
+    window
+      .localStorage
+      .clear()
+    this.setState({user: null})
   }
 
   handleLoginDetailsChange = (e) => {
@@ -70,7 +91,12 @@ class App extends React.Component {
     return (
       <div>
         <h2>Blogs</h2>
-        <p>Logged in as {this.state.user.name}</p>
+        <div>
+          <p>Logged in as {this.state.user.name}
+            <br></br>
+            <button onClick={this.logout}>Log out</button>
+          </p>
+        </div>
         {this
           .state
           .blogs

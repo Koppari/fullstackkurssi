@@ -41,7 +41,7 @@ blogsRouter.post('/', async(request, response) => {
         if (body.likes === undefined) {
             body.likes = 0
         }
-        if (body.title === undefined && body.url === undefined) {
+        if (body.title === undefined || body.url === undefined || body.title.trim() === '' || body.url.trim() === '') {
             return response
                 .status(400)
                 .json({error: "A blog must have a title and an url!"})

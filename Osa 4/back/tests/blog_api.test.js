@@ -3,7 +3,7 @@ const {app, server} = require('../index')
 const api = supertest(app)
 const Blog = require('../models/Blog')
 const User = require('../models/User')
-const helper = require('../utils/blog_api_helper')
+const helper = require('../utils/helpers/blog_api_helper')
 
 describe('when blogs exist in db', async() => {
     beforeAll(async() => {

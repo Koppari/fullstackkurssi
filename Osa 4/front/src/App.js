@@ -185,7 +185,7 @@ class App extends React.Component {
             .sort((a, b) => a.likes < b.likes)
             .map(blog => <Blog
               loggedUser={this.state.user.name}
-              key={blog._id}
+              key={blog.id}
               title={blog.title}
               author={blog.author}
               url={blog.url}
@@ -247,7 +247,7 @@ class App extends React.Component {
         {blogCreation()}
 
         {blogs()}
-        
+
       </div>
     )
   }

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 class Toggleable extends React.Component {
     constructor(props) {
@@ -32,12 +33,16 @@ class Toggleable extends React.Component {
                     <button onClick={this.toggleVisibility}>{this.props.buttonLabel}</button>
                 </div>
                 <div style={showWhenVisible}>
-                    {this.props.children} 
+                    {this.props.children}
                     <button onClick={this.toggleVisibility}>Cancel</button>
                 </div>
             </div>
         )
     }
+}
+
+Toggleable.propTypes = {
+    buttonLabel: PropTypes.string.isRequired
 }
 
 export default Toggleable

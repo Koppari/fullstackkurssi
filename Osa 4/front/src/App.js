@@ -28,6 +28,7 @@ class App extends React.Component {
   componentDidMount = async() => {
     const blogs = await blogService.getAll()
     this.setState({blogs: blogs})
+
     const loggedUserJSON = window
       .localStorage
       .getItem('loggedUser')
@@ -201,6 +202,7 @@ class App extends React.Component {
           {this
             .state
             .blogs
+            .sort((a,b) => a.likes < b.likes)
             .map(blog => <Blog
               key={blog._id}
               title={blog.title}

@@ -53,7 +53,6 @@ class App extends React.Component {
         likes: 0
       }
       await blogService.create(blogObject)
-
       this.setState({
         blogs: this
           .state
@@ -93,13 +92,41 @@ class App extends React.Component {
             .blogs
             .map(blog => blog.id !== id
               ? blog
-              : likedBlog)
+              : likedBlog),
+          success: 'Like registered.'
         })
         setTimeout(() => {
           this.setState({success: null})
         }, 3000)
       } catch (e) {
         this.setState({error: 'Something went wrong.'})
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 3000)
+      }
+    }
+  }
+
+  deleteOnClick = (id) => {
+    return async() => {
+      try {
+        const blog = this
+          .state
+          .blogs
+          .find(b => b.id === id)
+        await blogService.remove(blog.id)
+        this.setState({
+          blogs: this
+            .state
+            .blogs
+            .filter(blog => blog.id !== id),
+          success: "Blog deleted."
+        })
+        setTimeout(() => {
+          this.setState({success: null})
+        }, 3000)
+      } catch (e) {
+        this.setState({error: 'Deletion failed.'})
         setTimeout(() => {
           this.setState({error: null})
         }, 3000)
@@ -148,6 +175,7 @@ class App extends React.Component {
   }
 
   render() {
+
     const blogCreation = () => {
       return (
         <div>
@@ -202,15 +230,17 @@ class App extends React.Component {
           {this
             .state
             .blogs
-            .sort((a,b) => a.likes < b.likes)
+            .sort((a, b) => a.likes < b.likes)
             .map(blog => <Blog
+              loggedUser={this.state.user.name}
               key={blog._id}
               title={blog.title}
               author={blog.author}
               url={blog.url}
               likes={blog.likes}
               username={blog.user.username}
-              likeOnClick={this.likeOnClick(blog.id)}/>)}
+              likeOnClick={this.likeOnClick(blog.id)}
+              deleteOnClick={this.deleteOnClick(blog.id)}/>)}
         </div>
       </div>
     )

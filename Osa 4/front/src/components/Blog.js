@@ -15,13 +15,26 @@ class Blog extends React.Component {
       })
     }
 
+    const conditionalDeletionButton = () => {
+      if (this.props.loggedUser === this.props.username) {
+        return (
+          <button onClick={this.props.deleteOnClick}>Delete</button>  
+        )
+      } else if (this.props.username == null) {
+        return (
+          <button onClick={this.props.deleteOnClick}>Delete</button> 
+        )   
+      }
+    }
+
     const details = () => {
       if (this.state.visible) {
         return (
           <div>
             <a href={"https://"+this.props.url}>{this.props.url}</a><br/>
             {this.props.likes} Likes <button onClick={this.props.likeOnClick}>Like</button><br/>
-            Added by {this.props.username}
+            Added by {this.props.username}<br/>
+            {conditionalDeletionButton()}
           </div>
         )
       }

@@ -37,7 +37,7 @@ class Blog extends React.Component {
     return (
       <div style={blogStyle}>
         <div onClick={toggleDetails}>
-          {this.props.title} {this.props.author}
+          {this.props.title} by {this.props.author}
         </div>
           {details()}
       </div>

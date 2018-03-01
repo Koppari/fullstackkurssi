@@ -3,6 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import BlogCreationForm from './components/BlogCreationForm'
+import LoginForm from './components/LoginForm'
+import Toggleable from './components/Toggleable'
 import './index.css'
 
 class App extends React.Component {
@@ -17,7 +20,8 @@ class App extends React.Component {
       author: '',
       url: '',
       success: null,
-      error: null
+      error: null,
+      blogCreationVisible: false
     }
   }
 
@@ -38,6 +42,7 @@ class App extends React.Component {
 
   addBlog = async(e) => {
     e.preventDefault()
+    this.blogCreationVisible.toggleVisibility()
     try {
       const blogObject = {
         user: this.state.user,
@@ -110,39 +115,36 @@ class App extends React.Component {
   }
 
   render() {
+    const blogCreation = () => {
+      return (
+        <div>
+          <Toggleable buttonLabel="Create" ref={component => this.blogCreationVisible = component}>
+            <BlogCreationForm
+              handleSubmit={this.addBlog}
+              onChange={this.handleNewBlogDetailsChange}
+              title={this.state.title}
+              author={this.state.author}
+              url={this.state.url}/>
+          </Toggleable>
+        </div>
+      )
+    }
+
     if (this.state.user === null) {
       return (
         <div>
-          <h2>Log in</h2>
-          <form onSubmit={this.login}>
-            <div>
-              <input
-                type="text"
-                name="username"
-                value={this.state.username}
-                onChange={this.handleLoginDetailsChange}
-                placeholder="Username"/>
-            </div>
-            <div>
-              <input
-                type="text"
-                name="password"
-                value={this.state.password}
-                onChange={this.handleLoginDetailsChange}
-                placeholder="Password"/>
-            </div>
-            <button type="submit">Log in</button>
-          </form>
-
+          <LoginForm
+            handleSubmit={this.login}
+            onChange={this.handleLoginDetailsChange}
+            username={this.state.username}
+            password={this.state.password}/>
           <Notification message={this.state.success} type="success"/>
           <Notification message={this.state.error} type="error"/>
-
         </div>
       )
     }
 
     return (
-
       <div>
         <h1>Blogs</h1>
 
@@ -158,46 +160,17 @@ class App extends React.Component {
           </p>
         </div>
 
-        <div>
-          <h2>Create a new entry</h2>
-          <form onSubmit={this.addBlog}>
-            <div>
-              <input
-                type="text"
-                name="title"
-                value={this.state.title}
-                onChange={this.handleNewBlogDetailsChange}
-                placeholder="Title"/>
-            </div>
-            <div>
-              <input
-                type="text"
-                name="author"
-                value={this.state.author}
-                onChange={this.handleNewBlogDetailsChange}
-                placeholder="Author"/>
-            </div>
-            <div>
-              <input
-                type="text"
-                name="url"
-                value={this.state.url}
-                onChange={this.handleNewBlogDetailsChange}
-                placeholder="Url"/>
-            </div>
-            <button>Create</button>
-          </form>
-        </div>
+        {blogCreation()}
 
         <div>
           <h2>List of blogs</h2>
           {this
             .state
             .blogs
-            .map(blog => <Blog key={blog._id} blog={blog}/>)}
+            .map(blog => <Blog key={blog._id} title={blog.title} author={blog.author} url={blog.url} likes={blog.likes} username={blog.user.username}/>)}
         </div>
       </div>
-    );
+    )
   }
 }
 

@@ -175,6 +175,27 @@ class App extends React.Component {
   }
 
   render() {
+    const blogs = () => {
+      return (
+        <div>
+          <h2>List of blogs</h2>
+          {this
+            .state
+            .blogs
+            .sort((a, b) => a.likes < b.likes)
+            .map(blog => <Blog
+              loggedUser={this.state.user.name}
+              key={blog._id}
+              title={blog.title}
+              author={blog.author}
+              url={blog.url}
+              likes={blog.likes}
+              username={blog.user.username}
+              likeOnClick={this.likeOnClick(blog.id)}
+              deleteOnClick={this.deleteOnClick(blog.id)}/>)}
+        </div>
+      )
+    }
 
     const blogCreation = () => {
       return (
@@ -225,23 +246,8 @@ class App extends React.Component {
 
         {blogCreation()}
 
-        <div>
-          <h2>List of blogs</h2>
-          {this
-            .state
-            .blogs
-            .sort((a, b) => a.likes < b.likes)
-            .map(blog => <Blog
-              loggedUser={this.state.user.name}
-              key={blog._id}
-              title={blog.title}
-              author={blog.author}
-              url={blog.url}
-              likes={blog.likes}
-              username={blog.user.username}
-              likeOnClick={this.likeOnClick(blog.id)}
-              deleteOnClick={this.deleteOnClick(blog.id)}/>)}
-        </div>
+        {blogs()}
+        
       </div>
     )
   }

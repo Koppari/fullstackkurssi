@@ -28,7 +28,8 @@ describe.only('<SimpleBlog />', () => {
 
         const button = simpleBlogComponent.find('button')
         button.simulate('click')
-
-        expect(mockHandler.mock.calls.length).toBe(1)
+        button.simulate('click')
+    
+        expect(mockHandler.mock.calls.length).toBe(2)
     })
 })

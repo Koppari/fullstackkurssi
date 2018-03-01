@@ -25,6 +25,7 @@ class Blog extends React.Component {
           <button onClick={this.props.deleteOnClick}>Delete</button> 
         )   
       }
+
     }
 
     const details = () => {
@@ -48,8 +49,8 @@ class Blog extends React.Component {
     }
 
     return (
-      <div style={blogStyle}>
-        <div onClick={toggleDetails}>
+      <div style={blogStyle} className="wrapper">
+        <div onClick={toggleDetails} className="content">
           {this.props.title} by {this.props.author}
         </div>
           {details()}

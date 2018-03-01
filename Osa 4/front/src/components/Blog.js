@@ -8,10 +8,6 @@ class Blog extends React.Component {
     }
   }
 
-  handleLike = () => {
-
-  }
-
   render() {
     const toggleDetails = () => {
       this.setState({
@@ -23,8 +19,8 @@ class Blog extends React.Component {
       if (this.state.visible) {
         return (
           <div>
-            <a href={this.props.url}>{this.props.url}</a><br/>
-            {this.props.likes} Likes <button onClick={this.handleLike}>Like</button><br/>
+            <a href={"https://"+this.props.url}>{this.props.url}</a><br/>
+            {this.props.likes} Likes <button onClick={this.props.likeOnClick}>Like</button><br/>
             Added by {this.props.username}
           </div>
         )

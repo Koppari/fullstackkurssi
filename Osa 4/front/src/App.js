@@ -25,11 +25,9 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    blogService
-      .getAll()
-      .then(blogs => this.setState({blogs}))
-
+  componentDidMount = async() => {
+    const blogs = await blogService.getAll()
+    this.setState({blogs: blogs})
     const loggedUserJSON = window
       .localStorage
       .getItem('loggedUser')
@@ -42,7 +40,9 @@ class App extends React.Component {
 
   addBlog = async(e) => {
     e.preventDefault()
-    this.blogCreationVisible.toggleVisibility()
+    this
+      .blogCreationVisible
+      .toggleVisibility()
     try {
       const blogObject = {
         user: this.state.user,
@@ -71,6 +71,38 @@ class App extends React.Component {
       setTimeout(() => {
         this.setState({error: null})
       }, 3000)
+    }
+  }
+
+  likeOnClick = (id) => {
+    return async() => {
+      try {
+        const blog = this
+          .state
+          .blogs
+          .find(b => b.id === id)
+        const likedBlog = {
+          ...blog,
+          likes: blog.likes + 1
+        }
+        await blogService.update(id, likedBlog)
+        this.setState({
+          blogs: this
+            .state
+            .blogs
+            .map(blog => blog.id !== id
+              ? blog
+              : likedBlog)
+        })
+        setTimeout(() => {
+          this.setState({success: null})
+        }, 3000)
+      } catch (e) {
+        this.setState({error: 'Something went wrong.'})
+        setTimeout(() => {
+          this.setState({error: null})
+        }, 3000)
+      }
     }
   }
 
@@ -118,7 +150,9 @@ class App extends React.Component {
     const blogCreation = () => {
       return (
         <div>
-          <Toggleable buttonLabel="Create" ref={component => this.blogCreationVisible = component}>
+          <Toggleable
+            buttonLabel="Create"
+            ref={component => this.blogCreationVisible = component}>
             <BlogCreationForm
               handleSubmit={this.addBlog}
               onChange={this.handleNewBlogDetailsChange}
@@ -167,7 +201,14 @@ class App extends React.Component {
           {this
             .state
             .blogs
-            .map(blog => <Blog key={blog._id} title={blog.title} author={blog.author} url={blog.url} likes={blog.likes} username={blog.user.username}/>)}
+            .map(blog => <Blog
+              key={blog._id}
+              title={blog.title}
+              author={blog.author}
+              url={blog.url}
+              likes={blog.likes}
+              username={blog.user.username}
+              likeOnClick={this.likeOnClick(blog.id)}/>)}
         </div>
       </div>
     )

@@ -1,8 +1,8 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import Blog from "../components/Blog"
+import Blog from "./Blog"
 
-describe.only('<Blog />', () => {
+describe('<Blog />', () => {
     let blogComponent
     let blogHelper
     let mockHandler

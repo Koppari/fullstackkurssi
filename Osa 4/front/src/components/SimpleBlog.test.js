@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import SimpleBlog from "../components/SimpleBlog"
+import SimpleBlog from "./SimpleBlog"
 
 describe.skip('<SimpleBlog />', () => {
     it('renders title, author and likes', () => {

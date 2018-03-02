@@ -50,7 +50,7 @@ class Blog extends React.Component {
 
     return (
       <div style={blogStyle} className="wrapper">
-        <div onClick={toggleDetails} className="content">
+        <div onClick={toggleDetails} className="listedinfo">
           {this.props.title} by {this.props.author}
         </div>
           {details()}

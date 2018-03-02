@@ -34,17 +34,9 @@ describe.only('<Blog />', () => {
     })
 
     it('shows details on name click', () => {
-        const expected = shallow(
-            <div>
-                <a href={"https://www.test.com"}>www.test.com</a><br/>
-                2 Likes
-                <button onClick={mockHandler}>Like</button><br/>
-                Added by aa<br/>
-            </div>
-        )
         //tämä olisi sama kuin Blog-classissa toggleDetails()
         blogComponent.setState({visible: true})
         const detailsDiv = blogComponent.find('.wrapper')
-        expect(detailsDiv.text()).toContain(blogHelper.title, blogHelper.author, "Likes", "Added by", blogHelper.likes, blogHelper.username)
+        expect(detailsDiv.text()).toContain("Likes", "Added by", blogHelper.likes, blogHelper.url, blogHelper.username)
     })
 })

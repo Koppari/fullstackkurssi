@@ -1,5 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import {createStore} from 'redux'
+import counterReducer from "./reducer"
+
+const store = createStore(counterReducer)
 
 const Button = ({handleClick, text}) => (
     <button onClick={handleClick}>
@@ -10,122 +14,98 @@ const Button = ({handleClick, text}) => (
 const Statistics = ({rivit}) => {
     return rivit.map(rivi => (
         <tbody>
-            <tr> 
+            <tr>
                 <td>
-                    <Statistic nimi={rivi.nimi} />
+                    <Statistic nimi={rivi.nimi}/>
                 </td>
                 <td>
-                    <Statistic statistiikka={rivi.statistiikka} />
+                    <Statistic statistiikka={rivi.statistiikka}/>
                 </td>
             </tr>
         </tbody>
-    ));
+    ))
 }
 
 const Statistic = ({nimi, statistiikka}) => (
     <div>
-        {nimi} {statistiikka}
+        {nimi}
+        {statistiikka}
     </div>
 )
 
 class App extends React.Component {
-  constructor() {
-    super()
-    this.state = {
-      hyva: 0,
-      huono: 0,
-      neutraali: 0,
-      keskiarvo: 0,
-      yhteensa: 0,
-    }
-  }
+    render() {
+        let rivit = [
+            {
+                nimi: "hyva",
+                statistiikka: store
+                    .getState()
+                    .hyva
+            }, {
+                nimi: "neutraali",
+                statistiikka: store
+                    .getState()
+                    .neutraali
+            }, {
+                nimi: "huono",
+                statistiikka: store
+                    .getState()
+                    .huono
+            }, {
+                nimi: "yhteensa",
+                statistiikka: store
+                    .getState()
+                    .yhteensa
+            }, {
+                nimi: "keskiarvo",
+                statistiikka: store
+                    .getState()
+                    .keskiarvo
+            }, {
+                nimi: "prosentti",
+                statistiikka: (((store.getState().hyva / store.getState().yhteensa) * 100)).toFixed(1) + " %"
+            }
+        ]
 
-  vote = (arvo) => {
-      return () => {
-        if (arvo==="hyva") {
-            this.setState({hyva: this.state.hyva+1})
-            this.setState({keskiarvo: this.state.keskiarvo+1})
-            this.setState({yhteensa: this.state.yhteensa+1})
-        } else if (arvo==="neutraali") {
-            this.setState({neutraali: this.state.neutraali+1})
-            this.setState({yhteensa: this.state.yhteensa+1})
-        } else if (arvo==="huono") {
-            this.setState({huono: this.state.huono+1})
-            this.setState({keskiarvo: this.state.keskiarvo-1})
-            this.setState({yhteensa: this.state.yhteensa+1})
-        } 
-      }
-  }
-
-  render() {
-    const rivit = [
-    {
-        nimi:"hyva",
-        statistiikka:this.state.hyva
-    },
-    {
-        nimi:"neutraali",
-        statistiikka:this.state.neutraali
-    },
-    {
-        nimi:"huono",
-        statistiikka:this.state.huono
-    },
-    {
-        nimi:"keskiarvo",
-        statistiikka:this.state.keskiarvo
-    },
-    {
-        nimi:"prosentti",
-        statistiikka:(((this.state.hyva/this.state.yhteensa)*100)).toFixed(1)+" %"
-    }
-    ]
-
-    const ehdollinenRenderointi = () => {
-         if (this.state.hyva+this.state.neutraali+this.state.huono === 0) {
+        const ehdollinenRenderointi = () => {
+            if (store.getState().hyva + store.getState().neutraali + store.getState().huono === 0) {
+                return (
+                    <div>
+                        <p>ei yhtaan palautetta annettu</p>
+                    </div>
+                )
+            }
             return (
-                <div>
-                    <p>ei yhtaan palautetta annettu</p>
-                </div>
+                <table>
+                    <Statistics rivit={rivit}/>
+                </table>
             )
-         }
-         return (
-         <table>
-            <Statistics
-                rivit={rivit}
-            />
-         </table>
-         )
 
+        }
+
+        return (
+            <div>
+                <h1>anna palautetta</h1>
+
+                <Button handleClick={e => store.dispatch({type: 'HYVA'})} text="hyva"/>
+                <Button
+                    handleClick={e => store.dispatch({type: 'NEUTRAALI'})}
+                    text="neutraali"/>
+                <Button handleClick={e => store.dispatch({type: 'HUONO'})} text="huono"/>
+
+                <h1>statistiikka</h1>
+
+                {ehdollinenRenderointi()}
+
+            </div>
+        )
     }
-
-    return (
-      <div>
-        <h1>anna palautetta</h1>
-
-        <Button
-            handleClick={this.vote("hyva")}
-            text="hyva"
-        />
-        <Button
-            handleClick={this.vote("neutraali")}
-            text="neutraali"
-        />
-        <Button
-            handleClick={this.vote("huono")}
-            text="huono"
-        />
-
-        <h1>statistiikka</h1>
-
-        {ehdollinenRenderointi()}
-
-      </div>
-    )
-  }
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-)
+const renderApp = () => {
+    ReactDOM.render(
+        <App/>, document.getElementById('root'))
+}
+
+renderApp()
+store.subscribe(renderApp)

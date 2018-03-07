@@ -33,12 +33,6 @@ class Notification extends React.Component {
     }
 }
 
-const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1
-}
-
 Notification.contextTypes = {
     store: PropTypes.object
 }

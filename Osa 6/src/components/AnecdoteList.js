@@ -32,11 +32,12 @@ class AnecdoteList extends React.Component {
     }
 
     render() {
-        const anecdotes = this
+        let anecdotes = this
             .context
             .store
             .getState()
             .anecdotes
+            .filter(a => a.content.toLowerCase().indexOf(this.context.store.getState().filter.toLowerCase()) > -1)
 
         const style = {
             marginBottom: 7
@@ -44,7 +45,6 @@ class AnecdoteList extends React.Component {
 
         return (
             <div>
-                <h2>Anecdotes</h2>
                 {anecdotes.sort((a, b) => a.votes < b.votes).map(anecdote => <div style={style} key={anecdote.id}>
                     <div>
                         {anecdote.content}

@@ -1,23 +1,13 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import {connect} from 'react-redux'
 import {filterChange} from '../reducers/filterReducer'
 
 class Filter extends React.Component {
-    componentDidMount() {
-        const {store} = this.context
-        this.unsubscribe = store.subscribe(() => this.forceUpdate())
-    }
-
-    componentWillUnmount() {
-        this.unsubscribe()
-    }
-
     handleChange = (e) => {
         e.preventDefault()
         this
-            .context
-            .store
-            .dispatch(filterChange(e.target.value))   
+            .props
+            .filterChange(e.target.value)
     }
 
     render() {
@@ -27,14 +17,20 @@ class Filter extends React.Component {
 
         return (
             <div style={style}>
-                Filter <input onChange={this.handleChange}/>
+                <input onChange={this.handleChange} placeholder="Filter"/>
             </div>
         )
     }
 }
 
-Filter.contextTypes = {
-    store: PropTypes.object
+const mapStateToProps = (state) => {
+    return {filter: state.filter}
 }
 
-export default Filter
+const mapDispatchToProps = {
+    filterChange
+}
+
+const ConnectedFilter = connect(mapStateToProps, mapDispatchToProps)(Filter)
+
+export default ConnectedFilter

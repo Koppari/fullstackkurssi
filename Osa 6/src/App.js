@@ -8,11 +8,11 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Notification />
+        <Notification/>
         <h2>Anecdotes</h2>
-        <Filter />
-        <AnecdoteList />
-        <AnecdoteForm />
+        <Filter/>
+        <AnecdoteList/>
+        <AnecdoteForm/>
       </div>
     )
   }

@@ -14,7 +14,7 @@ const createNew = async(content) => {
 const update = async(id, newObject) => {
     const response = await axios.put(`${url}/${id}`, newObject)
     return response.data
-  }
+}
 
 export default {
     getAll,

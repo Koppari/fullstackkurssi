@@ -9,10 +9,9 @@ import anecdoteService from './services/anecdotes'
 
 class App extends React.Component {
   componentDidMount = async() => {
-    const anecdotes = await anecdoteService.getAll()
     this
       .props
-      .anecdoteInitialization(anecdotes)
+      .anecdoteInitialization()
   }
 
   render() {

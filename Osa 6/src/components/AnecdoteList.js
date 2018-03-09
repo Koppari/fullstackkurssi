@@ -8,17 +8,20 @@ const style = {
     marginBottom: 7
 }
 
-//const newAnecdote = await anecdoteService.createNew(content)
 class AnecdoteList extends React.Component {
     vote = (content, id) => async(e) => {
-        e.preventDefault() 
+        e.preventDefault()
+        const toVote = this
+            .props
+            .anecdotes
+            .find(a => a.id === id)
+        const voted = {
+            ...toVote,
+            votes: toVote.votes + 1
+        }
         this
             .props
-            .voteAnecdote(id)
-
-        const toVote = this.props.anecdotes.find(a => a.id === id)
-        const voted = {...toVote, votes: toVote.votes + 1}
-        await anecdoteService.update(id, voted)
+            .voteAnecdote(id, voted)
 
         this
             .props

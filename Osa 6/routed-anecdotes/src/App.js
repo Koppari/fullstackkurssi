@@ -1,11 +1,11 @@
 import React from 'react'
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 
-const Menu = () => (
-  <div>
-    <Link to='/'>anecdotes</Link>&nbsp;
-    <Link to='/create'>create new</Link>&nbsp;
-    <Link to='/about'>about</Link>&nbsp;
+const Menu = ({style}) => (
+  <div style={style}>
+    <Link to='/'>Anecdotes</Link>&nbsp;
+    <Link to='/create'>Create new</Link>&nbsp;
+    <Link to='/about'>About</Link>&nbsp;
   </div>
 )
 
@@ -91,21 +91,21 @@ class CreateNew extends React.Component {
   render() {
     return (
       <div>
-        <h2>create a new anecdote</h2>
+        <h2>Create a new anecdote</h2>
         <form onSubmit={this.handleSubmit}>
           <div>
-            content
+            Content{' '}
             <input name='content' value={this.state.content} onChange={this.handleChange}/>
           </div>
           <div>
-            author
+            Author{' '}
             <input name='author' value={this.state.author} onChange={this.handleChange}/>
           </div>
           <div>
-            url for more info
+            Url for more info{' '}
             <input name='info' value={this.state.info} onChange={this.handleChange}/>
           </div>
-          <button>create</button>
+          <button>Create</button>
         </form>
       </div>
     )
@@ -147,7 +147,6 @@ class App extends React.Component {
     this.setState({
       notification: this.state.notification = `${anecdote.content} has been added to the list of anecdotes!`
     })
-    console.log(this.state.notification);
     await setTimeout(() => {
       this.setState({
         notification: this.state.notification = ''
@@ -179,11 +178,18 @@ class App extends React.Component {
   }
 
   render() {
-    const notification = () => {
-      console.log(this.state.notification);
-      return this.state.notification === ''
-        ? null
-        : this.state.notification
+    const notificationStyle = {
+      backgroundColor: '#e9ffd9',
+      border: '.1em solid',
+      borderColor: '#D1FAB6',
+      padding: '3px 3px 3px 3px'
+    }
+
+    const menuStyle = {
+      backgroundColor: '#e3f7fc',
+      border: '.1em solid',
+      borderColor: '#8ed9f6',
+      padding: '3px 3px 3px 3px'
     }
 
     return (
@@ -191,7 +197,12 @@ class App extends React.Component {
         <Router>
           <div>
             <h1>Software anecdotes</h1>
-            <Menu/> {notification()}
+            <Menu style={menuStyle}/>
+            <div>
+              {this.state.notification === ''
+                ? null
+                : <div style={notificationStyle}>{this.state.notification}</div>}
+            </div>
             <Route
               exact
               path='/'

@@ -7,9 +7,7 @@ class Notification extends React.Component {
             if (this.props.notification != null) 
                 return (
                     <div>
-                        {this
-                            .props
-                            .notification}
+                        {this.props.notification}
                     </div>
                 )
         }

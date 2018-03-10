@@ -1,6 +1,6 @@
 import React from 'react'
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
-import {Container, Button, Table} from 'semantic-ui-react'
+import {Container, Button} from 'semantic-ui-react'
 import Blog from './components/Blog'
 import BlogList from './components/BlogList'
 import User from './components/User'
@@ -228,7 +228,7 @@ class App extends React.Component {
       return (
         <div>
           <h2>List of users</h2>
-          <table class="ui blue table">
+          <table className="ui blue table">
             <thead>
               <tr>
                 <th>User</th>

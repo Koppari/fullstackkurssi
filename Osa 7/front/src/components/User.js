@@ -1,17 +1,13 @@
 import React from 'react'
 
 const User = ({user}) => (
-        <tr>
-            <td headers="username">
-                {user.username}
-            </td>
-            <td headers="name">
-                {user.name}
-            </td>
-            <td headers="blogs">
-                {user.blogs.length}
-            </td>
-        </tr>
+    <div>
+        <h1>{user.username}</h1>
+        <h3>Added blogs</h3>
+        <ul>
+            {user.blogs.map(blog => {return <li key={blog.title}>{blog.title}</li>})}
+        </ul>
+    </div>
 )
 
 export default User

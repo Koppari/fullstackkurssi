@@ -2,6 +2,7 @@ import React from 'react'
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import Blog from './components/Blog'
 import User from './components/User'
+import UserList from './components/UserList'
 import blogService from './services/blogs'
 import userService from './services/users'
 import loginService from './services/login'
@@ -220,12 +221,17 @@ class App extends React.Component {
               {this
                 .state
                 .users
-                .map(user => <User key={user.id} user={user}/>)}
+                .map(user => <UserList key={user.id} user={user}/>)}
             </tbody>
           </table>
         </div>
       )
     }
+
+    const userById = (id) => this
+      .state
+      .users
+      .find(user => user.id === id)
 
     const blogCreation = () => {
       return (
@@ -279,8 +285,12 @@ class App extends React.Component {
             {blogCreation()}
 
             <Route exact path="/" render={() => blogs()}/>
-
             <Route exact path="/users" render={() => users()}/>
+            <Route
+              exact
+              path="/users/:id"
+              render={({match}) => <User user={userById(match.params.id)}/>}/>
+
           </div>
         </Router>
       </div>

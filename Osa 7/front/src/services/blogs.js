@@ -8,6 +8,11 @@ const getAll = async() => {
   return request.data
 }
 
+const get = async(id) => {
+  const request = await axios.get(`${baseUrl}/${id}`)
+  return request.data
+}
+
 const create = async(newObject) => {
   const config = {
     headers: {
@@ -41,6 +46,7 @@ const setToken = (newToken) => {
 
 export default {
   getAll,
+  get,
   create,
   update,
   remove,

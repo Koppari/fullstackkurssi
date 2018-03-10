@@ -1,6 +1,7 @@
 import React from 'react'
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import User from './components/User'
 import UserList from './components/UserList'
 import blogService from './services/blogs'
@@ -11,6 +12,15 @@ import BlogCreationForm from './components/BlogCreationForm'
 import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
 import './index.css'
+
+const Menu = ({user, logout}) => (
+    <div>
+      <Link to='/'>Blogs</Link>&nbsp;
+      <Link to='/users'>Users</Link>&nbsp;
+      Logged in as {user.name}.&nbsp;
+      <button onClick={logout}>Log out</button>
+    </div>
+  )
 
 class App extends React.Component {
   constructor(props) {
@@ -60,7 +70,14 @@ class App extends React.Component {
         url: this.state.url,
         likes: 0
       }
+
       await blogService.create(blogObject)
+      let idForNewBlog = await blogService.getAll()
+      idForNewBlog = idForNewBlog
+        .slice(-1)
+        .pop()
+      blogObject.id = idForNewBlog.id
+
       this.setState({
         blogs: this
           .state
@@ -115,9 +132,10 @@ class App extends React.Component {
     }
   }
 
-  deleteOnClick = (id) => {
+  deleteOnClick = (id, history) => {
     return async() => {
       try {
+        history.push('/')
         const blog = this
           .state
           .blogs
@@ -191,9 +209,9 @@ class App extends React.Component {
             .state
             .blogs
             .sort((a, b) => a.likes < b.likes)
-            .map(blog => <Blog
-              loggedUser={this.state.user.name}
-              key={blog.id}
+            .map((blog, i) => <BlogList
+              key={i}
+              id={blog.id}
               title={blog.title}
               author={blog.author}
               url={blog.url}
@@ -233,6 +251,11 @@ class App extends React.Component {
       .users
       .find(user => user.id === id)
 
+    const blogById = (id) => this
+      .state
+      .blogs
+      .find(blog => blog.id === id)
+
     const blogCreation = () => {
       return (
         <div>
@@ -268,6 +291,7 @@ class App extends React.Component {
       <div>
         <Router>
           <div>
+            <Menu user={this.state.user} logout={this.logout}/>
             <h1>Blogs</h1>
 
             <div>
@@ -275,16 +299,19 @@ class App extends React.Component {
               <Notification message={this.state.error} type="error"/>
             </div>
 
-            <div>
-              <p>Logged in as {this.state.user.name}
-                <br/>
-                <button onClick={this.logout}>Log out</button>
-              </p>
-            </div>
-
             {blogCreation()}
 
             <Route exact path="/" render={() => blogs()}/>
+            <Route
+              exact
+              path="/blogs/:id"
+              render={({match, history}) => <Blog
+              history={history}
+              blog={blogById(match.params.id)}
+              likeButton={this.likeOnClick(match.params.id)}
+              deleteButton={this.deleteOnClick(match.params.id, history)}
+              loggedUser={this.state.user.name}/>}/>
+
             <Route exact path="/users" render={() => users()}/>
             <Route
               exact

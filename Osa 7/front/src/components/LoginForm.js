@@ -1,11 +1,12 @@
 import React from 'react'
+import {Form} from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 const LoginForm = ({handleSubmit, onChange, username, password}) => {
     return (
         <div>
             <h2>Log in</h2>
-            <form onSubmit={handleSubmit}>
+            <Form onSubmit={handleSubmit} className="ui form" compact="true" style={{width: "370px"}}>
                 <div>
                     <input
                         type="text"
@@ -22,8 +23,8 @@ const LoginForm = ({handleSubmit, onChange, username, password}) => {
                         onChange={onChange}
                         placeholder="Password"/>
                 </div>
-                <button type="submit">Log in</button>
-            </form>
+                <button type="submit" className="ui basic button">Log in</button>
+            </Form>
         </div>
     )
 }

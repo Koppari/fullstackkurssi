@@ -1,9 +1,10 @@
 import React from 'react'
+import {Button} from 'semantic-ui-react'
 
 const BlogCreationForm = ({handleSubmit, onChange, title, author, url}) => {
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
+        <div className="ui form">
+            <form onSubmit={handleSubmit} style={{width: "370px"}}>
                 <div>
                     <input
                         type="text"
@@ -28,7 +29,7 @@ const BlogCreationForm = ({handleSubmit, onChange, title, author, url}) => {
                         onChange={onChange}
                         placeholder="Url"/>
                 </div>
-                <button>Create</button>
+                <Button className="ui primary button" size="tiny">Create</Button>
             </form>
         </div>
     )

@@ -1,5 +1,6 @@
 import React from 'react'
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
+import {Container, Button, Table} from 'semantic-ui-react'
 import Blog from './components/Blog'
 import BlogList from './components/BlogList'
 import User from './components/User'
@@ -13,14 +14,16 @@ import LoginForm from './components/LoginForm'
 import Toggleable from './components/Toggleable'
 import './index.css'
 
-const Menu = ({user, logout}) => (
-    <div>
-      <Link to='/'>Blogs</Link>&nbsp;
-      <Link to='/users'>Users</Link>&nbsp;
-      Logged in as {user.name}.&nbsp;
-      <button onClick={logout}>Log out</button>
+const TopMenu = ({user, logout}) => (
+  <div className="ui blue inverted menu">
+    <Link to='/' className="item">Blogs</Link>&nbsp;
+    <Link to='/users' className="item">Users</Link>&nbsp;
+    <div className="right menu">
+      <div className="item">Logged in as {user.name}</div>
+      <Button onClick={logout} className="ui basic button">Log out</Button >
     </div>
-  )
+  </div>
+)
 
 class App extends React.Component {
   constructor(props) {
@@ -45,8 +48,6 @@ class App extends React.Component {
     const users = await userService.getAll()
     this.setState({blogs: blogs})
     this.setState({users: users})
-    console.log(users);
-
     const loggedUserJSON = window
       .localStorage
       .getItem('loggedUser')
@@ -227,7 +228,7 @@ class App extends React.Component {
       return (
         <div>
           <h2>List of users</h2>
-          <table>
+          <table class="ui blue table">
             <thead>
               <tr>
                 <th>User</th>
@@ -288,39 +289,41 @@ class App extends React.Component {
     }
 
     return (
-      <div>
-        <Router>
-          <div>
-            <Menu user={this.state.user} logout={this.logout}/>
-            <h1>Blogs</h1>
-
+      <Container>
+        <div>
+          <Router>
             <div>
-              <Notification message={this.state.success} type="success"/>
-              <Notification message={this.state.error} type="error"/>
+              <TopMenu user={this.state.user} logout={this.logout}/>
+              <h1>Blogs</h1>
+
+              <div>
+                <Notification message={this.state.success} type="success"/>
+                <Notification message={this.state.error} type="error"/>
+              </div>
+
+              {blogCreation()}<br/>
+
+              <Route exact path="/" render={() => blogs()}/>
+              <Route
+                exact
+                path="/blogs/:id"
+                render={({match, history}) => <Blog
+                history={history}
+                blog={blogById(match.params.id)}
+                likeButton={this.likeOnClick(match.params.id)}
+                deleteButton={this.deleteOnClick(match.params.id, history)}
+                loggedUser={this.state.user.name}/>}/>
+
+              <Route exact path="/users" render={() => users()}/>
+              <Route
+                exact
+                path="/users/:id"
+                render={({match}) => <User user={userById(match.params.id)}/>}/>
+
             </div>
-
-            {blogCreation()}
-
-            <Route exact path="/" render={() => blogs()}/>
-            <Route
-              exact
-              path="/blogs/:id"
-              render={({match, history}) => <Blog
-              history={history}
-              blog={blogById(match.params.id)}
-              likeButton={this.likeOnClick(match.params.id)}
-              deleteButton={this.deleteOnClick(match.params.id, history)}
-              loggedUser={this.state.user.name}/>}/>
-
-            <Route exact path="/users" render={() => users()}/>
-            <Route
-              exact
-              path="/users/:id"
-              render={({match}) => <User user={userById(match.params.id)}/>}/>
-
-          </div>
-        </Router>
-      </div>
+          </Router>
+        </div>
+      </Container>
     )
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react'
+import {Button} from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 class Toggleable extends React.Component {
@@ -30,11 +31,11 @@ class Toggleable extends React.Component {
         return (
             <div>
                 <div style={hideWhenVisible}>
-                    <button onClick={this.toggleVisibility}>{this.props.buttonLabel}</button>
+                    <Button onClick={this.toggleVisibility} className="ui primary button" size="tiny">{this.props.buttonLabel} a new blog</Button>
                 </div>
                 <div style={showWhenVisible}>
                     {this.props.children}
-                    <button onClick={this.toggleVisibility}>Cancel</button>
+                    <Button onClick={this.toggleVisibility} className="ui secondary button" size="tiny">Cancel</Button>
                 </div>
             </div>
         )
